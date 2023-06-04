@@ -14,6 +14,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.example.verifikasiin.databinding.ActivityCameraBinding
+import com.example.verifikasiin.ui.verifikasi.VerificationActivity
 import com.example.verifikasiin.util.createFile
 
 class CameraActivity : AppCompatActivity() {
@@ -61,7 +62,7 @@ class CameraActivity : AppCompatActivity() {
                         "isBackCamera",
                         cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
                     )
-//                    setResult(Activity.CAMERA_X_RESULT, intent)
+                    setResult(VerificationActivity.CAMERA_X_RESULT, intent)
                     finish()
                 }
 

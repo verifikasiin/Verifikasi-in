@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 private const val MAXIMAL_SIZE = 1000000
-
 fun reduceImageSize(file: File) : File {
     val bitmap = BitmapFactory.decodeFile(file.path)
     var compressQuality = 100

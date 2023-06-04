@@ -17,4 +17,23 @@
     <string name="layanan_pemerintah">Layanan pemerintah</string>
     <string name="verifikasi_wajah_title">Verifikasi wajah</string>
     <string name="log_out">Log out</string>
+    <string name="edit_profil">Edit Profil</string>
+    <string name="deskripsi_edit_profil">Lakukan perubahan pada profilmu disini!</string>
+    <string name="nama">Nama</string>
+    <string name="jenis_kelamin">Jenis Kelamin</string>
+    <string name="tempat_lahir">Tempat lahir</string>
+    <string name="tanggal_lahir">Tanggal lahir</string>
+    <string name="golongan_darah">Golongan Darah</string>
+    <string name="alamat">Alamat</string>
+    <string name="rt">RT</string>
+    <string name="rw">RW</string>
+    <string name="kelurahan">Kelurahan</string>
+    <string name="kecamatan">Kecamatan</string>
+    <string name="agama">Agama</string>
+    <string name="kawin">Status perkawinan</string>
+    <string name="pekerjaan">Pekerjaan</string>
+    <string name="kewarganegaraan">Kewarganegaraan</string>
+    <string name="simpan">Simpan</string>
+    <string name="verifikasi">Verifikasi</string>
+    <string name="buka_kamera">Buka kamera</string>
 </resources>
