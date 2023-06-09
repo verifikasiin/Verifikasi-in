@@ -36,4 +36,6 @@
     <string name="simpan">Simpan</string>
     <string name="verifikasi">Verifikasi</string>
     <string name="buka_kamera">Buka kamera</string>
+    <string name="verifikasi_ktp_title">Verifikasi KTP</string>
+    <string name="selesaikan_pendaftaran">Selesaikan Pendaftaran</string>
 </resources>

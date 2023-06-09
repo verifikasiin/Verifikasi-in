@@ -52,7 +52,11 @@ class LoginFragment : Fragment(), View.OnClickListener, LoginViewModel.LoginCall
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.btn_masuk -> {
-                loginViewModel.login(loginBinding.edtNik.toString(), loginBinding.edtPassword.toString())
+                showNIKError()
+                showPasswordError()
+                if(showNIKError() &&  showPasswordError()) {
+                    loginViewModel.login(loginBinding.edtNik.toString(), loginBinding.edtPassword.toString())
+                }
             }
             R.id.btn_daftar -> {
                 val registerFragment = RegisterFragment()
@@ -68,6 +72,22 @@ class LoginFragment : Fragment(), View.OnClickListener, LoginViewModel.LoginCall
 
     companion object {
         private const val TAG = "LoginFragment"
+    }
+
+    fun showNIKError() : Boolean {
+        if(loginBinding.edtNik.text?.isNullOrEmpty() == true){
+            loginBinding.edtNik.error = "Masukkan NIK"
+            return false
+        }
+        return true
+    }
+    fun showPasswordError() : Boolean{
+        if(loginBinding.edtPassword.text?.isNullOrEmpty() == true){
+            loginBinding.edtPassword.error = "Masukkan Password"
+            return false
+        }
+        return true
+
     }
 
     override fun onLoginSuccess() {

@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.verifikasiin.R
+import com.example.verifikasiin.data.SessionManager
+import com.example.verifikasiin.data.UserModel
 import com.example.verifikasiin.databinding.FragmentRegisterBinding
 
 class RegisterFragment : Fragment(), View.OnClickListener {
 
     private lateinit var registerBinding : FragmentRegisterBinding
+    private lateinit var sessionModel : UserModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +37,25 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                 redirectToLoginPage()
             }
             R.id.btn_daftar -> {
-                Toast.makeText(requireContext(), "Berhasil mendaftar", Toast.LENGTH_LONG).show()
-                redirectToLoginPage()
+                verifyKTP()
             }
+        }
+    }
+
+    private fun verifyKTP() {
+        val session = SessionManager(requireContext())
+        sessionModel = UserModel(
+            email = registerBinding.edtEmail.text.toString(),
+            nik = registerBinding.edtNik.text.toString(),
+            password = registerBinding.edtPassword.text.toString()
+        )
+        session.saveSession(sessionModel)
+        val ktpVerificationFragment = KTPVerificationFragment()
+        val fragmentManager = parentFragmentManager
+        fragmentManager.beginTransaction().apply {
+            replace(R.id.frame_container, ktpVerificationFragment, LoginFragment::class.java.simpleName)
+            addToBackStack(null)
+            commit()
         }
     }
 
