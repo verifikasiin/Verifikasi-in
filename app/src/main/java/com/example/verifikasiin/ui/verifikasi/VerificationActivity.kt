@@ -10,8 +10,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
 import com.example.verifikasiin.R
 import com.example.verifikasiin.databinding.ActivityVerificationBinding
 import com.example.verifikasiin.ui.camera.CameraActivity
@@ -23,6 +25,7 @@ class VerificationActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var verificationBinding : ActivityVerificationBinding
     private var getFile : File? = null
+    private val verificationViewModel by viewModels<VerificationViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +33,9 @@ class VerificationActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(verificationBinding.root)
         verificationBinding.btnCamera.setOnClickListener(this)
 
+        verificationViewModel.file.observe(this) {
+            setPhotoFile(it)
+        }
 
         if(!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
@@ -60,9 +66,13 @@ class VerificationActivity : AppCompatActivity(), View.OnClickListener {
                 rotateFile(file, isBackCamera)
                 reduceImageSize(file)
                 getFile = file
-                verificationBinding.ivVerificationPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
+                setPhotoFile(file)
             }
         }
+    }
+
+    fun setPhotoFile(file: File) {
+        verificationBinding.ivVerificationPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
     }
 
     override fun onRequestPermissionsResult(
