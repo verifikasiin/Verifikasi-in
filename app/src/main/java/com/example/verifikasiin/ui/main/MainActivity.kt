@@ -7,9 +7,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
 import com.example.verifikasiin.R
+import com.example.verifikasiin.data.UserModel
 import com.example.verifikasiin.data.UsersPreference
 import com.example.verifikasiin.databinding.ActivityMainBinding
+import com.example.verifikasiin.ui.ViewModelFactory
 import com.example.verifikasiin.ui.auth.AuthActivity
 import com.example.verifikasiin.ui.edit.EditProfileActivity
 import com.example.verifikasiin.ui.verifikasi.VerificationActivity
@@ -17,10 +21,18 @@ import com.example.verifikasiin.ui.verifikasi.VerificationActivity
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding : ActivityMainBinding
+    private val mainViewModel by viewModels<MainViewModel> {
+        ViewModelFactory(application, this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        mainViewModel.user.observe(this) {
+            setUserData(it)
+        }
 
         binding.btnUbahProfil.setOnClickListener(this)
         binding.btnVerifikasi.setOnClickListener(this)
@@ -30,6 +42,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val inflater = menuInflater
         inflater.inflate(R.menu.option_menu, menu)
         return true
+    }
+
+    private fun setUserData(user : UserModel) {
+        binding.tvNik.text = user.nik
+        binding.tvName.text = user.name
+        binding.tvEmail.text = user.email
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

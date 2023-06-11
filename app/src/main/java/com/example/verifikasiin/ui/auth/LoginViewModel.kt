@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.verifikasiin.data.UserModel
 import com.example.verifikasiin.data.UsersPreference
 import com.example.verifikasiin.network.ApiConfig
-import com.example.verifikasiin.network.request.Requests
+import com.example.verifikasiin.network.request.LoginRequest
 import com.example.verifikasiin.network.response.LoginResponse
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -34,7 +34,7 @@ class LoginViewModel(application: Application) : ViewModel() {
     var loginCallback : LoginCallback? = null
 
     fun login(nik: String, password: String) {
-        val loginRequest = Requests(nik, password)
+        val loginRequest = LoginRequest(nik, password)
         viewModelScope.launch {
             _loading.value = true
             val call =  apiService.login(loginRequest)
