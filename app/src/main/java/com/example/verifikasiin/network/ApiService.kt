@@ -1,6 +1,7 @@
 package com.example.verifikasiin.network
 
 import com.example.verifikasiin.network.request.LoginRequest
+import com.example.verifikasiin.network.response.GetUserByIDResponse
 import com.example.verifikasiin.network.response.LoginResponse
 import com.example.verifikasiin.network.response.RegisterResponse
 import retrofit2.Call
@@ -23,5 +24,8 @@ interface ApiService {
         @Body request: LoginRequest
     ) : Call<LoginResponse>
 
-
+    @GET("/api/users/{userId}")
+    fun getUserById(
+        @Path("userId") userId: String
+    ) : Call<GetUserByIDResponse>
 }
