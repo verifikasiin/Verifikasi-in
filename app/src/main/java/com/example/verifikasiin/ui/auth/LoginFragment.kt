@@ -55,7 +55,7 @@ class LoginFragment : Fragment(), View.OnClickListener, LoginViewModel.LoginCall
                 showNIKError()
                 showPasswordError()
                 if(showNIKError() &&  showPasswordError()) {
-                    loginViewModel.login(loginBinding.edtNik.toString(), loginBinding.edtPassword.toString())
+                    loginViewModel.login(loginBinding.edtNik.text.toString(), loginBinding.edtPassword.text.toString())
                 }
             }
             R.id.btn_daftar -> {
@@ -97,6 +97,6 @@ class LoginFragment : Fragment(), View.OnClickListener, LoginViewModel.LoginCall
     }
 
     override fun onLoginError(errorMessage: String) {
-
+        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
     }
 }

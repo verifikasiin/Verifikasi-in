@@ -1,11 +1,10 @@
 package com.example.verifikasiin.network
 
+import com.example.verifikasiin.network.request.LoginRequest
 import com.example.verifikasiin.network.response.LoginResponse
 import com.example.verifikasiin.network.response.RegisterResponse
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -18,11 +17,10 @@ interface ApiService {
     ) : Call<RegisterResponse>
 
 
-    @FormUrlEncoded
+    @Headers("Content-Type: application/json")
     @POST("/api/login")
     fun login(
-        @Field("nik") nik: String,
-        @Field("password") password: String
+        @Body request: LoginRequest
     ) : Call<LoginResponse>
 
 

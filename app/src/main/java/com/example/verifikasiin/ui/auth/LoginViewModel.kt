@@ -9,11 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.verifikasiin.data.UserModel
 import com.example.verifikasiin.data.UsersPreference
 import com.example.verifikasiin.network.ApiConfig
+import com.example.verifikasiin.network.request.LoginRequest
 import com.example.verifikasiin.network.response.LoginResponse
 import kotlinx.coroutines.launch
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
-import javax.security.auth.callback.Callback
 
 class LoginViewModel(application: Application) : ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
@@ -33,10 +34,11 @@ class LoginViewModel(application: Application) : ViewModel() {
     var loginCallback : LoginCallback? = null
 
     fun login(nik: String, password: String) {
+        val loginRequest = LoginRequest(nik, password)
         viewModelScope.launch {
             _loading.value = true
-            val call =  apiService.login(nik, password)
-            call.enqueue(object: Callback<LoginResponse>, retrofit2.Callback<LoginResponse> {
+            val call =  apiService.login(loginRequest)
+            call.enqueue(object: Callback<LoginResponse> {
                 override fun onResponse(
                     call: Call<LoginResponse>,
                     response: Response<LoginResponse>,
@@ -46,6 +48,7 @@ class LoginViewModel(application: Application) : ViewModel() {
                         userInfo = UserModel()
                         userInfo.nik = nik
                         userInfo.password = password
+                        userInfo.token = response.body()?.accessToken
                         saveUserLogin(userInfo)
                         loginCallback?.onLoginSuccess()
                     }
@@ -71,6 +74,7 @@ class LoginViewModel(application: Application) : ViewModel() {
         userInfo = UserModel()
         userInfo.nik = user.email
         userInfo.password = user.password
+        userInfo.token = user.token
         usersPreference.setUser(userInfo)
     }
 
