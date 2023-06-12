@@ -30,6 +30,7 @@ class MainViewModel(application: Application) : ViewModel() {
     private val apiService = apiConfig.getApiService()
 
     private lateinit var userModel : UserModel
+    var getUserCallback : GetUserCallback? = null
 
     init {
         getUser(usersPreference.getUser().nik.toString())
@@ -48,12 +49,19 @@ class MainViewModel(application: Application) : ViewModel() {
                     _loading.value = false
                     if(response.isSuccessful) {
                         val responseBody = response.body()
-                        userModel = UserModel(
-                            nik = responseBody?.nik,
-                            name = responseBody?.nik?:"Joko",
-                            email = "test@mail.com"
-                        )
-                        _user.value = userModel
+                        if(responseBody?.fotoKtp == null) {
+                            getUserCallback?.onGetSuccess(false)
+                        }
+                        else {
+                            userModel = UserModel(
+                                nik = responseBody?.nik,
+                                name = responseBody?.nik?:"Joko",
+                                email = "test@mail.com"
+                            )
+                            _user.value = userModel
+                            getUserCallback?.onGetSuccess(true)
+                        }
+
                     } else {
                         Log.e(TAG, "onFailure: ${response.message()}" )
                     }
@@ -65,6 +73,11 @@ class MainViewModel(application: Application) : ViewModel() {
 
             })
         }
+    }
+
+    interface GetUserCallback {
+        fun onGetSuccess(ktpVerified: Boolean)
+        fun onGetError(errorMessage: String)
     }
 
     companion object {

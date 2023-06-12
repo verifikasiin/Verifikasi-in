@@ -23,7 +23,7 @@ class LoginFragment : Fragment(), View.OnClickListener, LoginViewModel.LoginCall
     private lateinit var loginBinding: FragmentLoginBinding
     private lateinit var user : UserModel
     private val loginViewModel by viewModels<LoginViewModel> {
-        ViewModelFactory(requireContext().applicationContext as Application, requireContext())
+        ViewModelFactory(requireContext().applicationContext as Application)
     }
 
     override fun onCreateView(
@@ -38,15 +38,24 @@ class LoginFragment : Fragment(), View.OnClickListener, LoginViewModel.LoginCall
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkAuth()
+        loginViewModel.loading.observe(requireActivity()){
+            showLoading(it)
+        }
         loginBinding.btnMasuk.setOnClickListener(this)
         loginBinding.btnDaftar.setOnClickListener(this)
         loginViewModel.loginCallback = this
     }
 
+
+
     private fun checkAuth() {
         val userPreferences = UsersPreference(requireContext())
         user = userPreferences.getUser()
         if(user.nik != "") startActivity(Intent(requireContext(), MainActivity::class.java))
+    }
+
+    private fun showLoading(loading : Boolean) {
+        loginBinding.loading.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     override fun onClick(v: View?) {

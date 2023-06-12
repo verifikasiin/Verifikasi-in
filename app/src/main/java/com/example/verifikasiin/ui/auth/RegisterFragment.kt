@@ -1,20 +1,26 @@
 package com.example.verifikasiin.ui.auth
 
+import android.app.Application
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.example.verifikasiin.R
 import com.example.verifikasiin.data.SessionManager
 import com.example.verifikasiin.data.UserModel
 import com.example.verifikasiin.databinding.FragmentRegisterBinding
+import com.example.verifikasiin.ui.ViewModelFactory
 
-class RegisterFragment : Fragment(), View.OnClickListener {
+class RegisterFragment : Fragment(), View.OnClickListener, RegisterViewModel.RegisterCallback {
 
     private lateinit var registerBinding : FragmentRegisterBinding
-    private lateinit var sessionModel : UserModel
+    private val registerViewModel by viewModels<RegisterViewModel> {
+        ViewModelFactory(requireContext().applicationContext as Application)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,6 +33,10 @@ class RegisterFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        registerViewModel.registerCallback = this
+        registerViewModel.loading.observe(requireActivity()) {
+            showLoading(it)
+        }
         registerBinding.btnDaftar.setOnClickListener(this)
         registerBinding.btnMasuk.setOnClickListener(this)
     }
@@ -37,26 +47,13 @@ class RegisterFragment : Fragment(), View.OnClickListener {
                 redirectToLoginPage()
             }
             R.id.btn_daftar -> {
-                verifyKTP()
+                registerViewModel.register(registerBinding.edtNik.text.toString(), registerBinding.edtPassword.text.toString(), registerBinding.edtConfirmPassword.text.toString())
             }
         }
     }
 
-    private fun verifyKTP() {
-        val session = SessionManager(requireContext())
-        sessionModel = UserModel(
-            email = registerBinding.edtEmail.text.toString(),
-            nik = registerBinding.edtNik.text.toString(),
-            password = registerBinding.edtPassword.text.toString()
-        )
-        session.saveSession(sessionModel)
-        val ktpVerificationFragment = KTPVerificationFragment()
-        val fragmentManager = parentFragmentManager
-        fragmentManager.beginTransaction().apply {
-            replace(R.id.frame_container, ktpVerificationFragment, LoginFragment::class.java.simpleName)
-            addToBackStack(null)
-            commit()
-        }
+    private fun showLoading(loading : Boolean) {
+        registerBinding.loading.visibility = if (loading) View.VISIBLE else View.GONE
     }
 
     private fun redirectToLoginPage() {
@@ -69,5 +66,17 @@ class RegisterFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onRegisterSuccess() {
+        Toast.makeText(requireContext(), SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show()
+        redirectToLoginPage()
+    }
 
+    override fun onRegisterError(errorMessage: String) {
+        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private const val TAG = "RegisterFragment"
+        private val SUCCESS_MESSAGE = "Pendaftaran berhasil, mengarahkan kembali ke menu login"
+    }
 }

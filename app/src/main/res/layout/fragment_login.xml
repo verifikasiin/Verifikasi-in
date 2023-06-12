@@ -1,91 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ui.auth.LoginFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="108dp"
-        android:textStyle="bold"
-        android:text="@string/app_name"
-        android:textSize="20sp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/masuk"
-        android:textSize="20sp"
-        />
+    <FrameLayout
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="10dp"
+        android:visibility="gone">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_nik"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="@string/nik"
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_nik"
-            android:maxLines="1"
-            android:inputType="number"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.google.android.material.textfield.TextInputEditText>
+            android:layout_height="match_parent"
+            android:background="@color/md_theme_dark_onSecondary"
+            android:alpha="0.5" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_password"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="@string/password"
-        >
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_password"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.google.android.material.textfield.TextInputEditText>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/btn_masuk"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
-        android:text="@string/masuk"/>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@android:style/Widget.Holo.ProgressBar.Large"
+            />
+    </FrameLayout>
 
     <LinearLayout
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="11"
+            android:layout_gravity="center"
+            android:layout_marginTop="108dp"
             android:textStyle="bold"
-            android:text="@string/pertanyaan_akun"/>
+            android:text="@string/app_name"
+            android:textSize="20sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/masuk"
+            android:textSize="20sp"
+            />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_nik"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="@string/nik"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_nik"
+                android:maxLines="1"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </com.google.android.material.textfield.TextInputEditText>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_password"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="@string/password"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_password"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </com.google.android.material.textfield.TextInputEditText>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btn_daftar"
-            android:layout_width="100dp"
+            android:id="@+id/btn_masuk"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:text="@string/masuk"/>
+
+        <LinearLayout
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/daftar"/>
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="11"
+                android:textStyle="bold"
+                android:text="@string/pertanyaan_akun"/>
+
+            <Button
+                android:id="@+id/btn_daftar"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/daftar"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>

@@ -10,3 +10,14 @@ data class LoginRequest(
 	@field:SerializedName("password")
 	val password: String
 )
+
+data class RegisterRequest(
+	@field:SerializedName("nik")
+	val nik: String,
+
+	@field:SerializedName("password")
+	val password: String,
+
+	@field:SerializedName("confPassword")
+	val confPassword: String
+)

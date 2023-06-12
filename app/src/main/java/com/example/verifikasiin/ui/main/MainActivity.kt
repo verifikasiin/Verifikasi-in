@@ -16,13 +16,14 @@ import com.example.verifikasiin.databinding.ActivityMainBinding
 import com.example.verifikasiin.ui.ViewModelFactory
 import com.example.verifikasiin.ui.auth.AuthActivity
 import com.example.verifikasiin.ui.edit.EditProfileActivity
+import com.example.verifikasiin.ui.verifikasi.KtpVerificationActivity
 import com.example.verifikasiin.ui.verifikasi.VerificationActivity
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.GetUserCallback {
 
     private lateinit var binding : ActivityMainBinding
     private val mainViewModel by viewModels<MainViewModel> {
-        ViewModelFactory(application, this)
+        ViewModelFactory(application)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        mainViewModel.getUserCallback = this
         mainViewModel.user.observe(this) {
             setUserData(it)
         }
@@ -47,7 +49,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun setUserData(user : UserModel) {
         binding.tvNik.text = user.nik
         binding.tvName.text = user.name
-        binding.tvEmail.text = user.email
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -75,10 +76,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+
+
     override fun onBackPressed() {
         finishAffinity()
     }
 
+    override fun onGetSuccess(ktpVerified: Boolean) {
+        if(!ktpVerified) {
+            startActivity(Intent(this, KtpVerificationActivity::class.java))
+        }
+    }
 
+    override fun onGetError(errorMessage: String) {
+        Toast.makeText(this, "Gagal mendapatkan data user", Toast.LENGTH_SHORT).show()
+    }
 
 }

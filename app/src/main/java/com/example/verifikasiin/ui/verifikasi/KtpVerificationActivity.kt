@@ -1,55 +1,47 @@
-package com.example.verifikasiin.ui.auth
+package com.example.verifikasiin.ui.verifikasi
 
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.verifikasiin.R
-import com.example.verifikasiin.databinding.FragmentKTPVerificationBinding
+import com.example.verifikasiin.databinding.ActivityKtpVerificationBinding
 import com.example.verifikasiin.ui.camera.CameraActivity
-import com.example.verifikasiin.ui.verifikasi.VerificationActivity
 import com.example.verifikasiin.util.reduceImageSize
 import com.example.verifikasiin.util.rotateFile
 import java.io.File
 
-class KTPVerificationFragment : Fragment(), View.OnClickListener {
+class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var ktpVerificationBinding: FragmentKTPVerificationBinding
+    private lateinit var ktpBinding : ActivityKtpVerificationBinding
     private var getFile : File? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        ktpVerificationBinding = FragmentKTPVerificationBinding.inflate(inflater, container, false)
-        return ktpVerificationBinding.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ktpBinding = ActivityKtpVerificationBinding.inflate(layoutInflater)
+        setContentView(ktpBinding.root)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         if(!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
-                requireActivity(),
+                this,
                 REQUIRED_PERMISSIONS,
                 REQUEST_CODE_PERMISSIONS
             )
         }
-        ktpVerificationBinding.btnCamera.setOnClickListener(this)
+
+        ktpBinding.btnCamera.setOnClickListener(this)
     }
 
     private fun startCameraX() {
-        val intent = Intent(requireContext(), CameraActivity::class.java)
+        val intent = Intent(this, CameraActivity::class.java)
         launcherIntentCameraX.launch(intent)
     }
 
@@ -68,9 +60,13 @@ class KTPVerificationFragment : Fragment(), View.OnClickListener {
                 rotateFile(file, isBackCamera)
                 reduceImageSize(file)
                 getFile = file
-                ktpVerificationBinding.ivVerificationPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
+                setPhotoFile(file)
             }
         }
+    }
+
+    fun setPhotoFile(file: File) {
+        ktpBinding.ivVerificationPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
     }
 
     override fun onRequestPermissionsResult(
@@ -81,18 +77,18 @@ class KTPVerificationFragment : Fragment(), View.OnClickListener {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (!allPermissionsGranted()) {
-                Toast.makeText(requireContext(), "Tidak mendapatkan izin.", Toast.LENGTH_SHORT).show()
-                requireActivity().finish()
+                Toast.makeText(this, "Tidak mendapatkan izin.", Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
     companion object {
-        private const val TAG = "VerificationActivity"
+        private const val TAG = "KtpVerificationActivity"
         const val CAMERA_X_RESULT = 200
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
@@ -103,7 +99,9 @@ class KTPVerificationFragment : Fragment(), View.OnClickListener {
             R.id.btn_camera -> {
                 startCameraX()
             }
+            R.id.btn_verifikasi -> {
+
+            }
         }
     }
-
 }
