@@ -19,7 +19,7 @@
         android:theme="@style/Theme.Verifikasiin"
         tools:targetApi="31">
         <activity
-            android:name=".KtpVerificationActivity"
+            android:name=".ui.verifikasi.KtpVerificationActivity"
             android:exported="false" />
         <activity
             android:name=".ui.verifikasi.VerificationActivity"

@@ -26,5 +26,5 @@ interface ApiService {
     @GET("/api/users/{userId}")
     fun getUserById(
         @Path("userId") userId: String
-    ) : Call<GetUserByIDResponse>
+    ) : Call<List<GetUserByIDResponse>>
 }

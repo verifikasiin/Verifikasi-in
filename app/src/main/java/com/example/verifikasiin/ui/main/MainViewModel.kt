@@ -11,6 +11,7 @@ import com.example.verifikasiin.data.UsersPreference
 import com.example.verifikasiin.network.ApiConfig
 import com.example.verifikasiin.network.response.GetUserByIDResponse
 import com.example.verifikasiin.ui.auth.LoginViewModel
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,26 +38,25 @@ class MainViewModel(application: Application) : ViewModel() {
     }
 
     private fun getUser(nik: String) {
-
         viewModelScope.launch {
             _loading.value = true
             val call = apiService.getUserById(nik)
-            call.enqueue(object : Callback<GetUserByIDResponse> {
+            call.enqueue(object : Callback<List<GetUserByIDResponse>> {
                 override fun onResponse(
-                    call: Call<GetUserByIDResponse>,
-                    response: Response<GetUserByIDResponse>,
+                    call: Call<List<GetUserByIDResponse>>,
+                    response: Response<List<GetUserByIDResponse>>,
                 ) {
                     _loading.value = false
                     if(response.isSuccessful) {
-                        val responseBody = response.body()
-                        if(responseBody?.fotoKtp == null) {
+                        val responseBody = response.body()?.get(0)
+
+                        if(responseBody?.fotoKtp.isNullOrEmpty()) {
                             getUserCallback?.onGetSuccess(false)
                         }
                         else {
                             userModel = UserModel(
                                 nik = responseBody?.nik,
                                 name = responseBody?.nik?:"Joko",
-                                email = "test@mail.com"
                             )
                             _user.value = userModel
                             getUserCallback?.onGetSuccess(true)
@@ -64,18 +64,19 @@ class MainViewModel(application: Application) : ViewModel() {
 
                     } else {
                         Log.e(TAG, "onFailure: ${response.message()}" )
+                        getUserCallback?.onGetError("gagal")
                     }
                 }
 
-                override fun onFailure(call: Call<GetUserByIDResponse>, t: Throwable) {
+                override fun onFailure(call: Call<List<GetUserByIDResponse>>, t: Throwable) {
                     Log.e(TAG, "onFailure: ${t.message}" )
+                    getUserCallback?.onGetError(t.message.toString())
                 }
-
             })
         }
     }
 
-    interface GetUserCallback {
+   interface GetUserCallback {
         fun onGetSuccess(ktpVerified: Boolean)
         fun onGetError(errorMessage: String)
     }

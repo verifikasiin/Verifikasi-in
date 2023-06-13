@@ -10,10 +10,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.verifikasiin.R
 import com.example.verifikasiin.databinding.ActivityKtpVerificationBinding
+import com.example.verifikasiin.ui.ViewModelFactory
 import com.example.verifikasiin.ui.camera.CameraActivity
 import com.example.verifikasiin.util.reduceImageSize
 import com.example.verifikasiin.util.rotateFile
@@ -22,6 +24,9 @@ import java.io.File
 class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var ktpBinding : ActivityKtpVerificationBinding
+    private val ktpVerificationViewModel by viewModels<KtpVerificationViewModel> {
+        ViewModelFactory(application)
+    }
     private var getFile : File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +40,12 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
                 REQUIRED_PERMISSIONS,
                 REQUEST_CODE_PERMISSIONS
             )
+        }
+
+        ktpVerificationViewModel.file.observe(this) {
+            if (it != null) {
+                setPhotoFile(it)
+            }
         }
 
         ktpBinding.btnCamera.setOnClickListener(this)
@@ -61,6 +72,7 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
                 reduceImageSize(file)
                 getFile = file
                 setPhotoFile(file)
+                ktpVerificationViewModel.setPhotoFile(file)
             }
         }
     }

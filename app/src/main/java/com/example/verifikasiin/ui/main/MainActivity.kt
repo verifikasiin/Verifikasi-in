@@ -1,6 +1,7 @@
 package com.example.verifikasiin.ui.main
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -35,7 +37,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
         mainViewModel.user.observe(this) {
             setUserData(it)
         }
-
         binding.btnUbahProfil.setOnClickListener(this)
         binding.btnVerifikasi.setOnClickListener(this)
     }
@@ -67,7 +68,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.btn_ubah_profil -> {
-                Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this@MainActivity, EditProfileActivity::class.java))
             }
             R.id.btn_verifikasi -> {
@@ -76,20 +76,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
         }
     }
 
-
-
     override fun onBackPressed() {
         finishAffinity()
     }
 
     override fun onGetSuccess(ktpVerified: Boolean) {
         if(!ktpVerified) {
-            startActivity(Intent(this, KtpVerificationActivity::class.java))
+            startActivity(Intent(this@MainActivity, KtpVerificationActivity::class.java))
         }
     }
 
     override fun onGetError(errorMessage: String) {
-        Toast.makeText(this, "Gagal mendapatkan data user", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
 }
