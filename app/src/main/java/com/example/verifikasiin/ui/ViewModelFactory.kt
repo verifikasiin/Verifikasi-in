@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.verifikasiin.ui.auth.LoginViewModel
 import com.example.verifikasiin.ui.auth.RegisterViewModel
+import com.example.verifikasiin.ui.edit.EditProfileViewModel
 import com.example.verifikasiin.ui.main.MainViewModel
 import com.example.verifikasiin.ui.verifikasi.KtpVerificationViewModel
 
@@ -22,6 +23,8 @@ class ViewModelFactory(
             return RegisterViewModel(mApp) as T
         } else if(modelClass.isAssignableFrom(KtpVerificationViewModel::class.java)) {
             return KtpVerificationViewModel(mApp) as T
+        } else if(modelClass.isAssignableFrom(EditProfileViewModel::class.java)) {
+            return EditProfileViewModel(mApp) as T
         }
         throw java.lang.IllegalArgumentException("Unknown View Model class: ${modelClass.name}")
     }

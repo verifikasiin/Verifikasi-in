@@ -47,9 +47,42 @@ class RegisterFragment : Fragment(), View.OnClickListener, RegisterViewModel.Reg
                 redirectToLoginPage()
             }
             R.id.btn_daftar -> {
-                registerViewModel.register(registerBinding.edtNik.text.toString(), registerBinding.edtPassword.text.toString(), registerBinding.edtConfirmPassword.text.toString())
+                showNIKError()
+                showPasswordError()
+                showConfirmPasswordError()
+                if(showNIKError() && showPasswordError() && showConfirmPasswordError()) {
+                    registerViewModel.register(registerBinding.edtNik.text.toString(), registerBinding.edtPassword.text.toString(), registerBinding.edtConfirmPassword.text.toString())
+                }
             }
         }
+    }
+
+    fun showNIKError() : Boolean {
+        if(registerBinding.edtNik.text?.isNullOrEmpty() == true){
+            registerBinding.edtNik.error = "Masukkan NIK"
+            return false
+        }
+        return true
+    }
+    fun showPasswordError() : Boolean{
+        if(registerBinding.edtPassword.text?.isNullOrEmpty() == true){
+            registerBinding.edtPassword.error = "Masukkan Password"
+            return false
+        }
+        if(!registerBinding.edtPassword.text.toString().equals(registerBinding.edtConfirmPassword.text.toString())){
+            registerBinding.edtPassword.error = "Password dan Confirm password tidak sesuai"
+            registerBinding.edtConfirmPassword.error = "Password dan Confirm password tidak sesuai"
+            return false
+        }
+        return true
+    }
+
+    fun showConfirmPasswordError() : Boolean{
+        if(registerBinding.edtConfirmPassword.text?.isNullOrEmpty() == true){
+            registerBinding.edtConfirmPassword.error = "Masukkan Password"
+            return false
+        }
+        return true
     }
 
     private fun showLoading(loading : Boolean) {
