@@ -33,6 +33,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val usersPreference = UsersPreference(this)
+
+        Toast.makeText(this, usersPreference.getUser().token, Toast.LENGTH_SHORT).show()
+
         mainViewModel.getUserCallback = this
         mainViewModel.user.observe(this) {
             setUserData(it)
