@@ -100,7 +100,6 @@ class LoginFragment : Fragment(), View.OnClickListener, LoginViewModel.LoginCall
     }
 
     override fun onLoginSuccess() {
-        Log.e(TAG, "Test")
         Toast.makeText(requireContext(), "Berhasil masuk", Toast.LENGTH_SHORT).show()
         startActivity(Intent(requireContext(), MainActivity::class.java))
     }

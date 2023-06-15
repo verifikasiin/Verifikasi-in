@@ -23,8 +23,18 @@ interface ApiService {
         @Body request: LoginRequest
     ) : Call<LoginResponse>
 
+    @Headers("Content-Type: application/json")
+    @PATCH("/api/users/{userId}")
+    fun updateUser(
+        @Path("userId") userId: String,
+        @Body request: GetUserByIDResponse
+    ): Call<GetUserByIDResponse>
+
     @GET("/api/users/{userId}")
     fun getUserById(
         @Path("userId") userId: String
     ) : Call<List<GetUserByIDResponse>>
+
+    @POST("/api/token")
+    fun refreshToken(): Call<LoginResponse>
 }

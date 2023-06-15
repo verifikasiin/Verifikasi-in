@@ -38,4 +38,8 @@
     <string name="buka_kamera">Buka kamera</string>
     <string name="verifikasi_ktp_title">Verifikasi KTP</string>
     <string name="selesaikan_pendaftaran">Selesaikan Pendaftaran</string>
+    <string name="layanan1">e-Samsat</string>
+    <string name="desc_layanan1">Klik disini untuk melanjutkan ke situs e-Samsat!</string>
+    <string name="layanan2">BPJS</string>
+    <string name="desc_layanan2">Klik disini untuk melanjutkan ke situs BPJS!</string>
 </resources>
