@@ -2,8 +2,8 @@
 Verifikasi.in is an Android application that allows users to easily log-in through many of government's application seamlessly.
 
 ## Features
-Face verification
-KTP Verification
+- Face verification
+- KTP Verification
 
 
 ## Installation
