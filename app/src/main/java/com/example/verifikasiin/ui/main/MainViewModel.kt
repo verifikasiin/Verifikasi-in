@@ -28,7 +28,7 @@ class MainViewModel(application: Application) : ViewModel() {
     private val usersPreference = UsersPreference(context)
 
     private val apiConfig = ApiConfig(usersPreference)
-    private val apiService = apiConfig.getApiService()
+    private val apiService = apiConfig.getApiService(BASE_URL)
 
     private lateinit var userModel : UserModel
     var getUserCallback : GetUserCallback? = null
@@ -83,5 +83,6 @@ class MainViewModel(application: Application) : ViewModel() {
 
     companion object {
         private const val TAG = "MainViewModel"
+        private const val BASE_URL = "https://verifikasiin.uc.r.appspot.com/"
     }
 }

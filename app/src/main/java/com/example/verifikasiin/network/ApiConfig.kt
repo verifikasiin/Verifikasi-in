@@ -16,7 +16,7 @@ class ApiConfig (private val sharedPreferences: UsersPreference) {
         private const val AUTH_PREFIX = "Bearer "
     }
 
-    fun getApiService() : ApiService {
+    fun getApiService(baseUrl : String) : ApiService {
         val loggingInterceptor = if(BuildConfig.DEBUG) {
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         } else {
@@ -42,7 +42,7 @@ class ApiConfig (private val sharedPreferences: UsersPreference) {
             .addInterceptor(tokenInterceptor)
             .build()
         val retrofit =Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080")
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

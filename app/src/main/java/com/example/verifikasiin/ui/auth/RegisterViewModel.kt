@@ -27,7 +27,7 @@ class RegisterViewModel(application: Application) : ViewModel() {
     private val usersPreference = UsersPreference(context)
 
     private val apiConfig = ApiConfig(usersPreference)
-    private val apiService = apiConfig.getApiService()
+    private val apiService = apiConfig.getApiService(BASE_URL)
 
     var registerCallback : RegisterCallback? = null
 
@@ -68,5 +68,6 @@ class RegisterViewModel(application: Application) : ViewModel() {
 
     companion object {
         private const val TAG = "RegisterViewModel"
+        private const val BASE_URL = "https://verifikasiin.uc.r.appspot.com/"
     }
 }

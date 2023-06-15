@@ -27,7 +27,7 @@ class LoginViewModel(application: Application) : ViewModel() {
     private val usersPreference = UsersPreference(context)
 
     private val apiConfig = ApiConfig(usersPreference)
-    private val apiService = apiConfig.getApiService()
+    private val apiService = apiConfig.getApiService(BASE_URL)
 
     private lateinit var userInfo : UserModel
 
@@ -86,5 +86,6 @@ class LoginViewModel(application: Application) : ViewModel() {
 
     companion object {
         private const val TAG = "LoginViewModel"
+        private const val BASE_URL = "https://verifikasiin.uc.r.appspot.com/"
     }
 }
