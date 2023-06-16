@@ -58,14 +58,14 @@ class RegisterFragment : Fragment(), View.OnClickListener, RegisterViewModel.Reg
     }
 
     fun showNIKError() : Boolean {
-        if(registerBinding.edtNik.text?.isNullOrEmpty() == true){
-            registerBinding.edtNik.error = "Masukkan NIK"
+        if(registerBinding.edtNik.text?.isNullOrEmpty() == true || registerBinding.edtNik.text.toString().length != 16){
+            registerBinding.edtNik.error = "Tolong masukkan 16 angka NIK pada KTP anda"
             return false
         }
         return true
     }
     fun showPasswordError() : Boolean{
-        if(registerBinding.edtPassword.text?.isNullOrEmpty() == true){
+        if(registerBinding.edtPassword.text?.isNullOrEmpty() == true || registerBinding.edtPassword.text.toString().length < 8){
             registerBinding.edtPassword.error = "Masukkan Password"
             return false
         }
@@ -78,7 +78,7 @@ class RegisterFragment : Fragment(), View.OnClickListener, RegisterViewModel.Reg
     }
 
     fun showConfirmPasswordError() : Boolean{
-        if(registerBinding.edtConfirmPassword.text?.isNullOrEmpty() == true){
+        if(registerBinding.edtConfirmPassword.text?.isNullOrEmpty() == true || registerBinding.edtConfirmPassword.text.toString().length < 8){
             registerBinding.edtConfirmPassword.error = "Masukkan Password"
             return false
         }

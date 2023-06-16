@@ -84,15 +84,15 @@ class LoginFragment : Fragment(), View.OnClickListener, LoginViewModel.LoginCall
     }
 
     fun showNIKError() : Boolean {
-        if(loginBinding.edtNik.text?.isNullOrEmpty() == true){
-            loginBinding.edtNik.error = "Masukkan NIK"
+        if(loginBinding.edtNik.text?.isNullOrEmpty() == true || loginBinding.edtNik.text.toString().length != 16){
+            loginBinding.edtNik.error = "Tolong masukkan 16 angka NIK pada KTP anda"
             return false
         }
         return true
     }
     fun showPasswordError() : Boolean{
-        if(loginBinding.edtPassword.text?.isNullOrEmpty() == true){
-            loginBinding.edtPassword.error = "Masukkan Password"
+        if(loginBinding.edtPassword.text?.isNullOrEmpty() == true || loginBinding.edtPassword.text.toString().length <= 8){
+            loginBinding.edtPassword.error = "Tolong masukkan kata sandi minimal 8 karakter"
             return false
         }
         return true

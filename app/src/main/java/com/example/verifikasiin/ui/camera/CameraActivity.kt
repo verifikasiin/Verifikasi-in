@@ -62,56 +62,6 @@ class CameraActivity : AppCompatActivity() {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
 
-                    val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
-                    val rotatedBitmap : Bitmap
-
-                    val rotationDegrees = when(cameraSelector) {
-                        CameraSelector.DEFAULT_BACK_CAMERA -> {
-                            if(bitmap.width > bitmap.height) {
-                                if(isDeviceInLandscape()) {
-                                    90
-                                } else {
-                                    270
-                                }
-                            } else {
-                                0
-                            }
-                        }
-                        CameraSelector.DEFAULT_FRONT_CAMERA -> {
-                            if(bitmap.width > bitmap.height) {
-                                if(isDeviceInLandscape()) {
-                                    270
-                                } else {
-                                    90
-                                }
-                            } else {
-                                0
-                            }
-                        }
-                        else -> 0
-                    }
-
-                    if (rotationDegrees != 0) {
-                        // Rotate the bitmap by 90 degrees
-                        val matrix = Matrix()
-                        matrix.postRotate(rotationDegrees.toFloat())
-                        rotatedBitmap = Bitmap.createBitmap(
-                            bitmap,
-                            0,
-                            0,
-                            bitmap.width,
-                            bitmap.height,
-                            matrix,
-                            true
-                        )
-                    } else {
-                        rotatedBitmap = bitmap
-                    }
-
-                    val outputStream = FileOutputStream(photoFile)
-                    rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-                    outputStream.close()
-
                     val intent = Intent()
                     intent.putExtra("picture", photoFile)
                     intent.putExtra(

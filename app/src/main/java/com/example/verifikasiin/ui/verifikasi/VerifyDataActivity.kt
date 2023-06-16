@@ -38,6 +38,8 @@ class VerifyDataActivity : AppCompatActivity(), VerifyDataViewModel.UpdateUserCa
             showLoading(it)
         }
 
+        supportActionBar?.title = TITLE
+
         verifyDataViewModel.updateUserCallback = this
         verifyDataViewModel.refreshTokenCallback = this
 
@@ -57,7 +59,9 @@ class VerifyDataActivity : AppCompatActivity(), VerifyDataViewModel.UpdateUserCa
                 kelurahan = if (verifyDataBinding.edtKelurahan.text?.isNotEmpty() == true) verifyDataBinding.edtKelurahan.text.toString() else null,
                 kecamatan = if (verifyDataBinding.edtKecamatan.text?.isNotEmpty() == true) verifyDataBinding.edtKecamatan.text.toString() else null
             )
-            verifyDataViewModel.updateUser(verifyDataBinding.edtNik.text.toString(), request)
+            if(showNIKError()){
+                verifyDataViewModel.updateUser(verifyDataBinding.edtNik.text.toString(), request)
+            }
         }
     }
 
@@ -73,6 +77,14 @@ class VerifyDataActivity : AppCompatActivity(), VerifyDataViewModel.UpdateUserCa
         verifyDataBinding.edtTempatLahir.setText(ttl?.get(0) ?: "")
         verifyDataBinding.edtTtl.setText(ttl?.get(1) ?: "")
         verifyDataBinding.edtTtl.setText(user.jenisKelamin)
+    }
+
+    fun showNIKError() : Boolean {
+        if(verifyDataBinding.edtNik.text?.isNullOrEmpty() == true || verifyDataBinding.edtNik.text.toString().length != 16){
+            verifyDataBinding.edtNik.error = "Tolong masukkan 16 angka NIK pada KTP anda"
+            return false
+        }
+        return true
     }
 
     override fun onRefreshSuccess(token: String) {
@@ -96,6 +108,7 @@ class VerifyDataActivity : AppCompatActivity(), VerifyDataViewModel.UpdateUserCa
 
     companion object {
         private const val TAG = "VerifyDataActivity"
+        private const val TITLE = "Lengkapi Profil KTP"
     }
 
 }

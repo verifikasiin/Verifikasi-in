@@ -38,6 +38,8 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener, KtpVe
         ktpBinding = ActivityKtpVerificationBinding.inflate(layoutInflater)
         setContentView(ktpBinding.root)
 
+        supportActionBar?.title = TITLE
+
         ktpVerificationViewModel.ocrCallback = this
         ktpVerificationViewModel.uploadCallback = this
         ktpVerificationViewModel.refreshTokenCallback = this
@@ -115,12 +117,7 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener, KtpVe
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
-    companion object {
-        private const val TAG = "KtpVerificationActivity"
-        const val CAMERA_X_RESULT = 200
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-        private const val REQUEST_CODE_PERMISSIONS = 10
-    }
+
 
     override fun onClick(v: View?) {
         when(v?.id) {
@@ -164,4 +161,13 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener, KtpVe
     override fun onRefreshError(errorMessage: String) {
 
     }
+
+    companion object {
+        private const val TAG = "KtpVerificationActivity"
+        private const val TITLE = "Verifikasi KTP"
+        const val CAMERA_X_RESULT = 200
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private const val REQUEST_CODE_PERMISSIONS = 10
+    }
+
 }

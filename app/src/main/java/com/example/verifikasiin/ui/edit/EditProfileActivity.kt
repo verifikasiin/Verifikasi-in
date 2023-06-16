@@ -32,6 +32,8 @@ class EditProfileActivity : AppCompatActivity(), EditProfileViewModel.GetUserCal
         editProfileViewModel.getUserCallback = this
         editProfileViewModel.updateUserCallback = this
 
+        supportActionBar?.title = TITLE
+
         editProfileViewModel.user.observe(this) {
             setUserData(it)
         }
@@ -57,7 +59,10 @@ class EditProfileActivity : AppCompatActivity(), EditProfileViewModel.GetUserCal
                 kecamatan = if (editProfileBinding.edtKecamatan.text?.isNotEmpty() == true) editProfileBinding.edtKecamatan.text.toString() else null,
                 berlakuHingga = if (editProfileBinding.edtBerlaku.text?.isNotEmpty() == true) editProfileBinding.edtBerlaku.text.toString() else null
             )
-            editProfileViewModel.updateUser(editProfileBinding.edtNik.text.toString(), request)
+            showNIKError()
+            if(showNIKError()){
+                editProfileViewModel.updateUser(editProfileBinding.edtNik.text.toString(), request)
+            }
         }
     }
 
@@ -91,6 +96,14 @@ class EditProfileActivity : AppCompatActivity(), EditProfileViewModel.GetUserCal
         usersPreference.updateToken(token)
     }
 
+    fun showNIKError() : Boolean {
+        if(editProfileBinding.edtNik.text?.isNullOrEmpty() == true || editProfileBinding.edtNik.text.toString().length != 16){
+            editProfileBinding.edtNik.error = "Tolong masukkan 16 angka NIK pada KTP anda"
+            return false
+        }
+        return true
+    }
+
     override fun onRefreshError(errorMessage: String) {
         Toast.makeText(this, "Gagal mendapatkan token : $errorMessage", Toast.LENGTH_SHORT).show()
     }
@@ -112,5 +125,8 @@ class EditProfileActivity : AppCompatActivity(), EditProfileViewModel.GetUserCal
         Toast.makeText(this, "Gagal mendapatkan data : $errorMessage", Toast.LENGTH_SHORT).show()
     }
 
+    companion object {
+        private const val TITLE = "Edit Profile"
+    }
 
 }

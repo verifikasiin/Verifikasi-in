@@ -58,6 +58,7 @@ class MainViewModel(application: Application) : ViewModel() {
                             userModel = GetUserByIDResponse(
                                 nik = responseBody?.nik.toString(),
                                 nama = responseBody?.nama.toString(),
+                                wajahVerified = responseBody?.wajahVerified
                             )
                             _user.value = userModel
                             getUserCallback?.onGetSuccess(true)
@@ -76,6 +77,8 @@ class MainViewModel(application: Application) : ViewModel() {
             })
         }
     }
+
+
 
    interface GetUserCallback {
         fun onGetSuccess(ktpVerified: Boolean)

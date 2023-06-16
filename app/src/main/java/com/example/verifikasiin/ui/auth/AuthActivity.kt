@@ -15,6 +15,8 @@ class AuthActivity : AppCompatActivity() {
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
         val fragmentManager = supportFragmentManager
         val loginFragment = LoginFragment()
         val fragment = fragmentManager.findFragmentByTag(LoginFragment::class.java.simpleName)
@@ -27,6 +29,7 @@ class AuthActivity : AppCompatActivity() {
                 .commit()
         }
     }
+
 
     override fun onBackPressed() {
         finishAffinity()

@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
     private fun setUserData(user : GetUserByIDResponse) {
         binding.tvNik.text = "NIK: ${user.nik}"
         binding.tvName.text = user.nama
+        binding.tvStatus.text = if(user.wajahVerified == true) STATUS_TRUE else STATUS_FALSE
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -86,6 +88,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
 
     override fun onGetError(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        private const val STATUS_TRUE = "Wajah terverifikasi"
+        private const val STATUS_FALSE = "Wajah tidak terverifikasi"
+        private const val STATUS_NULL = "Wajah belum diverifikasi"
     }
 
 }
