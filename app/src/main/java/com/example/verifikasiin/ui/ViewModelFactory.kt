@@ -9,6 +9,7 @@ import com.example.verifikasiin.ui.auth.RegisterViewModel
 import com.example.verifikasiin.ui.edit.EditProfileViewModel
 import com.example.verifikasiin.ui.main.MainViewModel
 import com.example.verifikasiin.ui.verifikasi.KtpVerificationViewModel
+import com.example.verifikasiin.ui.verifikasi.VerifyDataViewModel
 
 class ViewModelFactory(
     private val mApp : Application
@@ -25,6 +26,8 @@ class ViewModelFactory(
             return KtpVerificationViewModel(mApp) as T
         } else if(modelClass.isAssignableFrom(EditProfileViewModel::class.java)) {
             return EditProfileViewModel(mApp) as T
+        } else if(modelClass.isAssignableFrom(VerifyDataViewModel::class.java)) {
+            return VerifyDataViewModel(mApp) as T
         }
         throw java.lang.IllegalArgumentException("Unknown View Model class: ${modelClass.name}")
     }

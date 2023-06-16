@@ -42,4 +42,8 @@
     <string name="desc_layanan1">Klik disini untuk melanjutkan ke situs e-Samsat!</string>
     <string name="layanan2">BPJS</string>
     <string name="desc_layanan2">Klik disini untuk melanjutkan ke situs BPJS!</string>
+    <string name="verifikasi_data">Verifikasi Data</string>
+    <string name="deskripsi_verifikasi_data">Periksa data diri anda dan lengkapi data diri anda</string>
+    <string name="welcome_home">Selamat datang kembali!</string>
+    <string name="berlaku">Masa berlaku KTP</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.verifikasiin.ui.edit
+package com.example.verifikasiin.ui.verifikasi
 
 import android.app.Application
 import android.util.Log
@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Update
 import com.example.verifikasiin.data.UsersPreference
 import com.example.verifikasiin.network.ApiConfig
 import com.example.verifikasiin.network.response.GetUserByIDResponse
@@ -16,7 +15,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EditProfileViewModel(application: Application) : ViewModel() {
+class VerifyDataViewModel(application: Application) : ViewModel() {
 
     private val _loading = MutableLiveData<Boolean>()
     val loading : LiveData<Boolean> = _loading
@@ -31,26 +30,21 @@ class EditProfileViewModel(application: Application) : ViewModel() {
     private val apiService = apiConfig.getApiService(BASE_URL)
 
     private lateinit var userModel : GetUserByIDResponse
-    var getUserCallback : GetUserCallback? = null
     var updateUserCallback : UpdateUserCallback? = null
     var refreshTokenCallback : RefreshTokenCallback? = null
-
-    init {
-        getUser(usersPreference.getUser().nik.toString())
-    }
 
     fun updateUser(nik: String, user : GetUserByIDResponse) {
         viewModelScope.launch {
             _loading.value = true
             val call = apiService.updateUser(nik, user)
-            call.enqueue(object : Callback<GetUserByIDResponse>{
+            call.enqueue(object : Callback<GetUserByIDResponse> {
                 override fun onResponse(
                     call: Call<GetUserByIDResponse>,
                     response: Response<GetUserByIDResponse>
                 ) {
                     _loading.value = false
                     if(response.isSuccessful){
-                        updateUserCallback?.onUpdateSuccess(response.body()?.nik.toString())
+                        updateUserCallback?.onUpdateSuccess()
                     }
                     else if(response.message().equals("Forbidden")) {
                         getToken()
@@ -63,7 +57,7 @@ class EditProfileViewModel(application: Application) : ViewModel() {
 
                 override fun onFailure(call: Call<GetUserByIDResponse>, t: Throwable) {
                     Log.e(TAG, "onFailure: ${t.message}")
-                    updateUserCallback?.onUpdateError(t.message.toString())
+                    updateUserCallback?.onUpdateError(t.message.toString() + "AAAAAAAA")
                 }
 
             })
@@ -97,59 +91,18 @@ class EditProfileViewModel(application: Application) : ViewModel() {
         }
     }
 
-    fun getUser(nik: String) {
-        viewModelScope.launch {
-            _loading.value = true
-            val call = apiService.getUserById(nik)
-            call.enqueue(object : Callback<GetUserByIDResponse> {
-                override fun onResponse(
-                    call: Call<GetUserByIDResponse>,
-                    response: Response<GetUserByIDResponse>,
-                ) {
-                    _loading.value = false
-                    if(response.isSuccessful) {
-                        val responseBody = response.body()
-
-                        if (responseBody != null) {
-                            userModel = responseBody
-                        }
-                        _user.value = userModel
-                        getUserCallback?.onGetSuccess()
-                    }
-                    else if(response.message().equals("Forbidden")) {
-                        getToken()
-                    }
-                    else {
-                        Log.e(TAG, "onFailure: ${response.message()}" )
-                        getUserCallback?.onGetError("gagal")
-                    }
-                }
-
-                override fun onFailure(call: Call<GetUserByIDResponse>, t: Throwable) {
-                    Log.e(TAG, "onFailure: ${t.message}" )
-                    getUserCallback?.onGetError(t.message.toString())
-                }
-            })
-        }
-    }
 
     interface RefreshTokenCallback {
         fun onRefreshSuccess(token:String)
         fun onRefreshError(errorMessage: String)
     }
     interface UpdateUserCallback {
-        fun onUpdateSuccess(nik : String)
+        fun onUpdateSuccess()
         fun onUpdateError(errorMessage: String)
     }
 
-    interface GetUserCallback {
-        fun onGetSuccess()
-        fun onGetError(errorMessage: String)
-    }
-
     companion object {
-        private const val TAG = "EditProfileViewModel"
+        private const val TAG = "VerifyDataViewModel"
         private const val BASE_URL = "https://verifikasiin.uc.r.appspot.com/"
     }
-
 }

@@ -1,7 +1,6 @@
 package com.example.verifikasiin.ui.main
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -9,11 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
 import com.example.verifikasiin.R
 import com.example.verifikasiin.data.UserModel
 import com.example.verifikasiin.data.UsersPreference
 import com.example.verifikasiin.databinding.ActivityMainBinding
+import com.example.verifikasiin.network.response.GetUserByIDResponse
 import com.example.verifikasiin.ui.ViewModelFactory
 import com.example.verifikasiin.ui.auth.AuthActivity
 import com.example.verifikasiin.ui.edit.EditProfileActivity
@@ -29,13 +28,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val usersPreference = UsersPreference(this)
-
-        Toast.makeText(this, usersPreference.getUser().token, Toast.LENGTH_SHORT).show()
 
         mainViewModel.getUserCallback = this
         mainViewModel.user.observe(this) {
@@ -51,9 +45,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
         return true
     }
 
-    private fun setUserData(user : UserModel) {
-        binding.tvNik.text = user.nik
-        binding.tvName.text = user.name
+    private fun setUserData(user : GetUserByIDResponse) {
+        binding.tvNik.text = "NIK: ${user.nik}"
+        binding.tvName.text = user.nama
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -87,7 +81,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, MainViewModel.Ge
     override fun onGetSuccess(ktpVerified: Boolean) {
         if(!ktpVerified) {
             startActivity(Intent(this@MainActivity, KtpVerificationActivity::class.java))
-        }
+        } else return
     }
 
     override fun onGetError(errorMessage: String) {

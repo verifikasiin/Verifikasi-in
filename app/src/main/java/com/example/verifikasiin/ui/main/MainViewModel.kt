@@ -21,8 +21,8 @@ class MainViewModel(application: Application) : ViewModel() {
     private val _loading = MutableLiveData<Boolean>()
     val loading : LiveData<Boolean> = _loading
 
-    private val _user = MutableLiveData<UserModel>()
-    val user : LiveData<UserModel> = _user
+    private val _user = MutableLiveData<GetUserByIDResponse>()
+    val user : LiveData<GetUserByIDResponse> = _user
 
     private val context = application.applicationContext
     private val usersPreference = UsersPreference(context)
@@ -30,10 +30,11 @@ class MainViewModel(application: Application) : ViewModel() {
     private val apiConfig = ApiConfig(usersPreference)
     private val apiService = apiConfig.getApiService(BASE_URL)
 
-    private lateinit var userModel : UserModel
+    private lateinit var userModel : GetUserByIDResponse
     var getUserCallback : GetUserCallback? = null
 
     init {
+        Log.e(TAG, usersPreference.getUser().nik.toString())
         getUser(usersPreference.getUser().nik.toString())
     }
 
@@ -41,22 +42,22 @@ class MainViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             _loading.value = true
             val call = apiService.getUserById(nik)
-            call.enqueue(object : Callback<List<GetUserByIDResponse>> {
+            call.enqueue(object : Callback<GetUserByIDResponse> {
                 override fun onResponse(
-                    call: Call<List<GetUserByIDResponse>>,
-                    response: Response<List<GetUserByIDResponse>>,
+                    call: Call<GetUserByIDResponse>,
+                    response: Response<GetUserByIDResponse>,
                 ) {
                     _loading.value = false
                     if(response.isSuccessful) {
-                        val responseBody = response.body()?.get(0)
-
+                        val responseBody = response.body()
+                        Log.d(TAG, responseBody.toString())
                         if(responseBody?.fotoKtp.isNullOrEmpty()) {
                             getUserCallback?.onGetSuccess(false)
                         }
                         else {
-                            userModel = UserModel(
-                                nik = responseBody?.nik,
-                                name = responseBody?.nik?:"Joko",
+                            userModel = GetUserByIDResponse(
+                                nik = responseBody?.nik.toString(),
+                                nama = responseBody?.nama.toString(),
                             )
                             _user.value = userModel
                             getUserCallback?.onGetSuccess(true)
@@ -68,7 +69,7 @@ class MainViewModel(application: Application) : ViewModel() {
                     }
                 }
 
-                override fun onFailure(call: Call<List<GetUserByIDResponse>>, t: Throwable) {
+                override fun onFailure(call: Call<GetUserByIDResponse>, t: Throwable) {
                     Log.e(TAG, "onFailure: ${t.message}" )
                     getUserCallback?.onGetError(t.message.toString())
                 }

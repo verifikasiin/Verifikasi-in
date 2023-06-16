@@ -2,9 +2,8 @@ package com.example.verifikasiin.network
 
 import com.example.verifikasiin.network.request.LoginRequest
 import com.example.verifikasiin.network.request.RegisterRequest
-import com.example.verifikasiin.network.response.GetUserByIDResponse
-import com.example.verifikasiin.network.response.LoginResponse
-import com.example.verifikasiin.network.response.RegisterResponse
+import com.example.verifikasiin.network.response.*
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -33,8 +32,21 @@ interface ApiService {
     @GET("/api/users/{userId}")
     fun getUserById(
         @Path("userId") userId: String
-    ) : Call<List<GetUserByIDResponse>>
+    ) : Call<GetUserByIDResponse>
 
     @POST("/api/token")
     fun refreshToken(): Call<LoginResponse>
+
+    @Multipart
+    @POST("/api/upload/{userId}")
+    fun uploadKtp(
+        @Path("userId") userId: String,
+        @Part file: MultipartBody.Part
+    ) : Call<UploadKTPResponse>
+
+    @Multipart
+    @POST("/ocr")
+    fun ocr(
+        @Part file: MultipartBody.Part
+    ) : Call<OCRResponse>
 }

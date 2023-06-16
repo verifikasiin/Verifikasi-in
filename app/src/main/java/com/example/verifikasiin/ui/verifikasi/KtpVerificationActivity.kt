@@ -14,14 +14,17 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.verifikasiin.R
+import com.example.verifikasiin.data.SessionManager
+import com.example.verifikasiin.data.UsersPreference
 import com.example.verifikasiin.databinding.ActivityKtpVerificationBinding
+import com.example.verifikasiin.network.response.GetUserByIDResponse
 import com.example.verifikasiin.ui.ViewModelFactory
 import com.example.verifikasiin.ui.camera.CameraActivity
 import com.example.verifikasiin.util.reduceImageSize
 import com.example.verifikasiin.util.rotateFile
 import java.io.File
 
-class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
+class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener, KtpVerificationViewModel.OCRCallback, KtpVerificationViewModel.UploadCallback, KtpVerificationViewModel.RefreshTokenCallback {
 
     private lateinit var ktpBinding : ActivityKtpVerificationBinding
     private val ktpVerificationViewModel by viewModels<KtpVerificationViewModel> {
@@ -29,10 +32,15 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
     }
     private var getFile : File? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ktpBinding = ActivityKtpVerificationBinding.inflate(layoutInflater)
         setContentView(ktpBinding.root)
+
+        ktpVerificationViewModel.ocrCallback = this
+        ktpVerificationViewModel.uploadCallback = this
+        ktpVerificationViewModel.refreshTokenCallback = this
 
         if(!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
@@ -41,14 +49,16 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
                 REQUEST_CODE_PERMISSIONS
             )
         }
-
         ktpVerificationViewModel.file.observe(this) {
             if (it != null) {
                 setPhotoFile(it)
             }
         }
-
+        ktpVerificationViewModel.loading.observe(this) {
+            showLoading(it)
+        }
         ktpBinding.btnCamera.setOnClickListener(this)
+        ktpBinding.btnUpload.setOnClickListener(this)
     }
 
     private fun startCameraX() {
@@ -79,7 +89,13 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
 
     fun setPhotoFile(file: File) {
         ktpBinding.ivVerificationPhoto.setImageBitmap(BitmapFactory.decodeFile(file.path))
+        getFile = file
     }
+
+    private fun showLoading(loading : Boolean) {
+        ktpBinding.loading.visibility = if (loading) View.VISIBLE else View.GONE
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -111,9 +127,41 @@ class KtpVerificationActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btn_camera -> {
                 startCameraX()
             }
-            R.id.btn_verifikasi -> {
-
+            R.id.btn_upload -> {
+                if(getFile != null){
+                    ktpVerificationViewModel.ocr(getFile!!)
+                } else {
+                    Toast.makeText(this, "Ambil foto KTP terlebih dahulu", Toast.LENGTH_SHORT).show()
+                }
             }
         }
+    }
+
+    override fun onOCRSuccess(user: GetUserByIDResponse) {
+        val session = SessionManager(this)
+        val userPref = UsersPreference(this).getUser()
+        session.saveSession(user)
+        ktpVerificationViewModel.uploadKtp(userPref.nik.toString(), getFile!!)
+    }
+
+    override fun onOCRError(errorMessage: String) {
+        Toast.makeText(this, "Verifikasi gagal, silahkan verifikasi ulang.", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onUploadSuccess(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this@KtpVerificationActivity, VerifyDataActivity::class.java))
+    }
+
+    override fun onUploadError(errorMessage: String) {
+        Toast.makeText(this, "Gagal mengupload gambar, silahkan coba lagi", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onRefreshSuccess(token: String) {
+
+    }
+
+    override fun onRefreshError(errorMessage: String) {
+
     }
 }

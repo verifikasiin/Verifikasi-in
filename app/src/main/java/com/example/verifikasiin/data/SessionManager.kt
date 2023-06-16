@@ -2,24 +2,27 @@ package com.example.verifikasiin.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.verifikasiin.network.response.GetUserByIDResponse
 
 class SessionManager(context: Context) {
     private val sharedSessionPreferences : SharedPreferences = context.getSharedPreferences(
         PREFS_NAME, Context.MODE_PRIVATE)
     private val editor: SharedPreferences.Editor = sharedSessionPreferences.edit()
 
-    fun saveSession(user: UserModel){
-        editor.putString(EMAIL, user.email)
+    fun saveSession(user: GetUserByIDResponse){
         editor.putString(NIK, user.nik)
-        editor.putString(PASSWORD, user.password)
+        editor.putString(NAMA, user.nama)
+        editor.putString(TEMPAT_TANGGAL_LAHIR, user.tempatTanggalLahir)
+        editor.putString(JENIS_KELAMIN, user.jenisKelamin)
         editor.apply()
     }
 
-    fun getSession() : UserModel {
-        val model = UserModel(
-            email = sharedSessionPreferences.getString(EMAIL, ""),
-            nik = sharedSessionPreferences.getString(NIK, ""),
-            password = sharedSessionPreferences.getString(PASSWORD, ""),
+    fun getSession() : GetUserByIDResponse {
+        val model = GetUserByIDResponse(
+            nik = sharedSessionPreferences.getString(NIK, "").toString(),
+            nama = sharedSessionPreferences.getString(NAMA, ""),
+            tempatTanggalLahir = sharedSessionPreferences.getString(TEMPAT_TANGGAL_LAHIR, ""),
+            jenisKelamin = sharedSessionPreferences.getString(JENIS_KELAMIN, "")
         )
         return model
     }
@@ -31,8 +34,9 @@ class SessionManager(context: Context) {
 
     companion object {
         private const val PREFS_NAME = "session_pref"
-        private const val EMAIL = "email"
         private const val NIK = "nik"
-        private const val PASSWORD = "password"
+        private const val NAMA = "nama"
+        private const val TEMPAT_TANGGAL_LAHIR = "tempat_tanggal_lahir"
+        private const val JENIS_KELAMIN = "jenis_kelamin"
     }
 }

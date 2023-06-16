@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class ApiConfig (private val sharedPreferences: UsersPreference) {
 
@@ -38,6 +39,9 @@ class ApiConfig (private val sharedPreferences: UsersPreference) {
         }
 
         val client = OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS) // Set longer connection timeout
+            .readTimeout(60, TimeUnit.SECONDS) // Set longer read timeout
+            .writeTimeout(60, TimeUnit.SECONDS) // Set longer write timeout
             .addInterceptor(loggingInterceptor)
             .addInterceptor(tokenInterceptor)
             .build()

@@ -49,7 +49,7 @@ class LoginViewModel(application: Application) : ViewModel() {
                         userInfo.nik = nik
                         userInfo.password = password
                         userInfo.token = response.body()?.accessToken
-                        saveUserLogin(userInfo)
+                        usersPreference.setUser(userInfo)
                         loginCallback?.onLoginSuccess()
                     }
                     else {
@@ -70,13 +70,6 @@ class LoginViewModel(application: Application) : ViewModel() {
 
     }
 
-    fun saveUserLogin(user : UserModel) {
-        userInfo = UserModel()
-        userInfo.nik = user.email
-        userInfo.password = user.password
-        userInfo.token = user.token
-        usersPreference.setUser(userInfo)
-    }
 
     interface LoginCallback {
         fun onLoginSuccess()

@@ -45,7 +45,7 @@
         <ImageView
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_marginTop="56dp"
+            android:layout_marginTop="24dp"
             android:layout_gravity="center"
             android:src="@drawable/verifikasiin_logo" />
 
